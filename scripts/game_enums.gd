@@ -3,5 +3,6 @@ enum TerrainType {
 	PLAIN,
 	FOREST,
 	HOUSE,
-	ROAD
+	ROAD,
+	IMPASSABLE
 }

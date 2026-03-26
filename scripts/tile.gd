@@ -9,6 +9,7 @@ var terrain_type: int
 func get_movement_cost():
 	match terrain_type:
 		GameEnums.TerrainType.PLAIN: return 1
-		GameEnums.TerrainType.PLAIN: return 2
-		GameEnums.TerrainType.PLAIN: return 2
-		GameEnums.TerrainType.PLAIN: return 1
+		GameEnums.TerrainType.FOREST: return 2
+		GameEnums.TerrainType.HOUSE: return 2
+		GameEnums.TerrainType.ROAD: return 1
+		GameEnums.TerrainType.IMPASSABLE: return -1

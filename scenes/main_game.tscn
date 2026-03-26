@@ -1,10 +1,13 @@
-[gd_scene format=3 uid="uid://da2tgbgkcc6lf"]
+[gd_scene load_steps=2 format=3 uid="uid://da2tgbgkcc6lf"]
+
+[ext_resource type="Script" uid="uid://dch0aroach24n" path="res://scripts/map_manager.gd" id="1_1oj5k"]
 
 [node name="GameManager" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 
 [node name="MapManager" type="Node2D" parent="."]
+script = ExtResource("1_1oj5k")
 
 [node name="UnitManager" type="Node2D" parent="."]
 
