@@ -42,7 +42,9 @@ func generate_army(points: int, team: int):
 
 	while not available_choices.is_empty():
 		var choice = available_choices.pick_random()
-		var pos = MapManager.get_random_spawn(team)
+		var pos = MapManager.get_random_spawn(team, UnitManager)
+		if pos == Vector2i(-1, -1):
+			break
 		UnitManager.spawn_unit(choice["scene"], pos, team)
 		remaining -= choice["cost"]
 
