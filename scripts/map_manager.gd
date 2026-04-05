@@ -23,12 +23,15 @@ func load_map(map_data):
 func get_tile(pos: Vector2i) -> Tile:
 	return tiles.get(pos, null)
 
-func get_random_spawn(team: int) -> Vector2i:
+func get_random_spawn(team: int, unit_manager) -> Vector2i:
 	var teamspawns = [] #Vector2i
+	var spawn_id := -(team + 1)
 	for pos in tiles:
-		if tiles[pos].terrain_type < 0 && (0 - (tiles[pos].terrain_type)) % (team + 1) == 0:
-			#terrain_type is an int, if it is negative AND when flipped it divides with the team
-			#(e.g -1 for team 0, -2 for team 1)
-			#then it is a spawn of the team
+		if tiles[pos].terrain_type == spawn_id and unit_manager.get_unit_at(pos) == null:
+			#team 0 uses -1, team 1 uses -2, etc.
 			teamspawns.append(pos)
+
+	if teamspawns.is_empty():
+		return Vector2i(-1, -1)
+
 	return teamspawns.pick_random()
