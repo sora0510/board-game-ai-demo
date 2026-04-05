@@ -2,7 +2,7 @@ extends Control
 #basic AI hook
 @onready var UnitManager = $"../UnitManager"
 
-func take_turn():
+func take_turn(): #randomly acting AI
 	var game_manager = get_parent()
 	var map_manager = game_manager.get_node("MapManager")
 	var available_actions: Array = []
