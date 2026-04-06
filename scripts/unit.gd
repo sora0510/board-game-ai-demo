@@ -30,7 +30,6 @@ func perform_ability(ability, target):
 		return false
 	
 	if ability.execute(self, target):
-		action_points = maxi(action_points - 1, 0)
 		return true
 	
 	return false
