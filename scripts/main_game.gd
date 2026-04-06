@@ -58,7 +58,7 @@ func _ready() -> void:
 	EndTurnButton.pressed.connect(_on_end_turn_button_pressed)
 	PauseButton.pressed.connect(_on_pause_button_pressed)
 
-	MapManager.load_map("res://resources/example_map.gd")
+	MapManager.load_map("res://resources/map_big.gd")
 	generate_army(20, HUMAN_TEAM)
 	generate_army(20, AI_TEAM)
 	start_turn()

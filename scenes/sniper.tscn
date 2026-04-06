@@ -49,18 +49,19 @@ offset_right = -24.0
 offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 1, 1, 1)
 
 [node name="Badge" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-horizontal_alignment = 1
-vertical_alignment = 1
-text = "P"
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
+text = "P"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(50, 50)
