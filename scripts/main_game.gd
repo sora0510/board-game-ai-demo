@@ -26,6 +26,8 @@ const UI_PADDING := 12
 @onready var PauseButton: TextureButton = $UI/PauseButton
 @onready var PauseOverlay = $UI/PauseOverlay
 @onready var ResumeButton: TextureButton = $UI/PauseOverlay/CenterContainer/ResumeButton
+@onready var ActionLogPanel: PanelContainer = $UI/ActionLogPanel
+@onready var ActionLogLabel: Label = $UI/ActionLogPanel/MarginContainer/ActionLogLabel
 
 const PAUSE_ICON_PATH := "res://assets/pause.png"
 const RESUME_ICON_PATH := "res://assets/resume.png"
@@ -49,6 +51,7 @@ var board_origin: Vector2 = Vector2.ZERO
 var team_vp = []
 var vt = []
 var team_won: int = -1
+var action_log_tween: Tween = null
 
 func generate_army(points: int, team: int):
 	var remaining = points
@@ -76,6 +79,7 @@ func _ready() -> void:
 	PauseButton.process_mode = Node.PROCESS_MODE_ALWAYS
 	PauseOverlay.process_mode = Node.PROCESS_MODE_ALWAYS
 	ResumeButton.process_mode = Node.PROCESS_MODE_ALWAYS
+	ActionLogPanel.process_mode = Node.PROCESS_MODE_ALWAYS
 	PauseButton.texture_normal = _load_icon(PAUSE_ICON_PATH)
 	ResumeButton.texture_normal = _load_icon(RESUME_ICON_PATH)
 	PauseButton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -117,8 +121,44 @@ func _layout_ui() -> void:
 	UnitManager.position = map_origin
 	HUDPanel.position = Vector2(origin_x + map_size.x + UI_GAP, origin_y)
 	PauseButton.position = map_origin + Vector2(UI_PADDING, 4.0)
+	if ActionLogPanel != null and ActionLogPanel.visible:
+		var action_log_size: Vector2 = ActionLogPanel.get_combined_minimum_size()
+		ActionLogPanel.position = map_origin + Vector2(16, 16)
+		ActionLogPanel.size = action_log_size
 	board_origin = map_origin
 	PauseOverlay.position = Vector2.ZERO
+
+func show_action_log(message: String, board_pos: Vector2i) -> void:
+	if ActionLogPanel == null or ActionLogLabel == null:
+		return
+
+	ActionLogLabel.text = message
+	ActionLogPanel.visible = true
+	ActionLogPanel.modulate = Color(1, 1, 1, 1)
+	ActionLogPanel.z_index = 1000
+	ActionLogPanel.size = ActionLogPanel.get_combined_minimum_size()
+
+	var map_size: Vector2 = Vector2(MapManager.grid_size.x * TILE_SIZE, MapManager.grid_size.y * TILE_SIZE)
+	var desired_position: Vector2 = board_origin + Vector2(board_pos.x * TILE_SIZE + 12.0, board_pos.y * TILE_SIZE + 12.0)
+	var max_x: float = board_origin.x + map_size.x - ActionLogPanel.size.x
+	var max_y: float = board_origin.y + map_size.y - ActionLogPanel.size.y
+	ActionLogPanel.position.x = clampf(desired_position.x, board_origin.x, max_x)
+	ActionLogPanel.position.y = clampf(desired_position.y, board_origin.y, max_y)
+
+	if action_log_tween != null and is_instance_valid(action_log_tween):
+		action_log_tween.kill()
+
+	action_log_tween = create_tween()
+	action_log_tween.tween_interval(2.3)
+	action_log_tween.tween_property(ActionLogPanel, "modulate", Color(1, 1, 1, 0), 0.35)
+	action_log_tween.tween_callback(_hide_action_log)
+
+func _hide_action_log() -> void:
+	if ActionLogPanel == null:
+		return
+
+	ActionLogPanel.visible = false
+	ActionLogPanel.modulate = Color(1, 1, 1, 1)
 
 func _load_icon(path: String) -> Texture2D:
 	var image: Image = Image.load_from_file(path)

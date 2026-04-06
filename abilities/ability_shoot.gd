@@ -20,6 +20,13 @@ func execute(user: Unit, target: Unit) -> bool:
 
 	if user.position_on_grid.distance_to(target.position_on_grid) > attack_range:
 		return false
+
+	var attacker_team := "Blue" if user.team == 0 else "Red"
+	var target_team := "Blue" if target.team == 0 else "Red"
+	var action_log := "%s %s took damage from %s %s" % [target_team, target.display_name, attacker_team, user.display_name]
+	var game = user.get_tree().current_scene
+	if game != null and game.has_method("show_action_log"):
+		game.call_deferred("show_action_log", action_log, target.position_on_grid)
 	
 	target.health -= damage
 	
