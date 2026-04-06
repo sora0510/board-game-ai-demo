@@ -29,6 +29,7 @@ var unit_pool = [
 
 var current_team = HUMAN_TEAM
 var team_no = 2 #in the future maybe more than 2 teams
+var defeated_teams = []
 var selected_unit: Unit = null
 var selected_ability: Ability = null
 var turn_action_used := false
@@ -61,8 +62,8 @@ func _ready() -> void:
 	PauseButton.pressed.connect(_on_pause_button_pressed)
 
 	MapManager.load_map("res://resources/map_big.gd")
-	generate_army(20, HUMAN_TEAM)
-	generate_army(20, AI_TEAM)
+	generate_army(5, HUMAN_TEAM)
+	generate_army(5, AI_TEAM)
 	start_turn()
 
 func start_turn():
@@ -70,6 +71,24 @@ func start_turn():
 	selected_unit = null
 	selected_ability = null
 	status_message = "Blue units are yours. Click a blue unit, then choose an ability."
+	
+	if UnitManager.get_units_for_team(current_team) == [] && (defeated_teams.find(current_team) == -1):
+		defeated_teams.append(current_team) #push this team into defeated teams if it has no units
+	
+	if defeated_teams.size() == (team_no - 1) && (defeated_teams.find(current_team) == -1):
+		status_message = "YOU WIN!" #team wins if there are no other teams
+		_refresh_ability_panel()
+		_refresh_highlights()
+		_update_ui()
+		return
+	
+	if defeated_teams.find(current_team) != -1:
+		status_message = "You have lost!" #if team is defeated then it cant do anything
+		_refresh_ability_panel()
+		_refresh_highlights()
+		_update_ui()
+		if current_team != AI_TEAM: #AI still has to continue
+			return
 
 	for unit in UnitManager.get_units_for_team(current_team):
 		unit.action_points = 1
